@@ -3,6 +3,7 @@ package entities;
 
 import exceptions.XMLException;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
@@ -22,7 +23,8 @@ public class Terminal {
     public void main()
     {
         try{
-             ServerConfig.loadServerConfigFromXML("src/main/java/resources/terminal.xml");
+             ServerConfig.loadServerConfigFromXML("src/main/resources/terminal.xml");
+             loadTerminalConfigFromXML("src/main/resources/terminal.xml");
         }catch (Exception ex)
         {
             return;
@@ -32,7 +34,7 @@ public class Terminal {
 
         try
         {
-           transactionHandler.runTransactions(transactionHandler.loadTransactionsFromXML("src/main/java/resources/terminal.xml"));
+           transactionHandler.runTransactions(transactionHandler.loadTransactionsFromXML("src/main/resources/terminal.xml"));
 
         }catch (Exception ex)
         {
@@ -47,13 +49,18 @@ public class Terminal {
 
 
             Element domElement = xmlReader.getDocumentElement(xmlReader.parseXmlFile(fileName));
-            NodeList serverNode = xmlReader.getElementsByTagName(domElement,"terminal");
 
-            Element element=(Element)serverNode.item(0);
+            Node rootNode = xmlReader.getFirstChild(xmlReader.parseXmlFile(fileName));
 
-//            serverIP=XMLReader.getTextValue(element,"ip");
-//            serverPort=XMLReader.getIntValue(element,"port");
+            //get root attribute
+            Element element=(Element)rootNode;
+            terminalID = XMLReader.getStringValueOfAttributeTag(element,"id");
+            terminalType = XMLReader.getStringValueOfAttributeTag(element,"type");
 
+
+            NodeList terminalNode = xmlReader.getElementsByTagName(domElement,"outLog");
+            element=(Element)terminalNode.item(0);
+            LOG_FILE_NAME = XMLReader.getStringValueOfAttributeTag(element,"path");
 
         } catch (Exception ex) {
             throw new XMLException("server config can not load");
@@ -69,7 +76,7 @@ public class Terminal {
         Socket socket;
 
         try {
-            socket = new Socket(Server.serverIP,Server.serverPort);
+            socket = new Socket(ServerConfig.serverIP,ServerConfig.serverPort);
             socket.setSoTimeout(timeOut);
             InputStream inputStream=socket.getInputStream();
             OutputStream outputStream=socket.getOutputStream();

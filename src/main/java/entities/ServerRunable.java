@@ -17,7 +17,7 @@ public class ServerRunable implements  Runnable {
         Transaction transaction = new Transaction();
         try {
             transaction = transaction.convertTransMsgToTransObject(receiveMessage());
-
+            LogBuilder.createLog(Server.LOG_FILE_NAME,transaction.getOperationType());
 
         } catch (Exception e) {
 

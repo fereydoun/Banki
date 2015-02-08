@@ -1,6 +1,8 @@
 package entities;
 
 import java.math.BigDecimal;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Created by Dotin school 5 on 2/7/2015.
@@ -12,6 +14,7 @@ public class Deposit{
     private BigDecimal balance;
     private BigDecimal initialBalance;
     private BigDecimal upperBound;
+    public static Map deposits=new Hashtable();
 
     public String getDepositNumber() {
         return  depositNumber;

@@ -22,8 +22,9 @@ public class ServerConfig {
 
             Element element=(Element)serverNode.item(0);
 
-            serverIP=XMLReader.getTextValue(element,"ip");
-            serverPort=XMLReader.getIntValue(element,"port");
+
+            serverIP=XMLReader.getStringValueOfAttributeTag(element,"ip");
+            serverPort=XMLReader.getIntValueOfAttributeTag(element,"port");
 
 
         } catch (Exception ex) {

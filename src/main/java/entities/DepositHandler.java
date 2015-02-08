@@ -8,9 +8,8 @@ import java.util.Map;
 
 public class DepositHandler {
 
-    public Map loadDepositsFromJSONFile(String fileName) throws Exception {
+    public void loadDepositsFromJSONFile(String fileName) throws Exception {
         JSONReader jsonReader = new JSONReader();
-        Map deposits = new Hashtable();
         Deposit deposit;
 
         try {
@@ -30,7 +29,7 @@ public class DepositHandler {
                     deposit.setInitialBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setUpperBound(new BigDecimal(jsonDeposit.get("upperBound").toString()));
 
-                    deposits.put(deposit.getDepositNumber(), deposit);
+                    Deposit.deposits.put(deposit.getDepositNumber(), deposit);
 
                 } catch (Exception ex) {
                     System.out.println();
@@ -42,6 +41,5 @@ public class DepositHandler {
             throw new Exception(ex.getMessage());
         }
 
-        return deposits;
     }
 }

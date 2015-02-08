@@ -1,5 +1,6 @@
 package entities;
 
+import exceptions.JSONException;
 import org.json.simple.JSONObject;
 
 import java.net.ServerSocket;
@@ -12,8 +13,21 @@ public class Server {
     public static int serverPort;
     public static final String LOG_FILE_NAME ="ServerLog.log";
 
+    public void main() {
+        DepositHandler depositHandler = new DepositHandler();
+        try {
 
-    public static void loadServerConfigFromJSON(String fileName)
+            loadServerConfigFromJSON("src/main/resources/core.json");
+            depositHandler.loadDepositsFromJSONFile("src/main/resources/core.json");
+            Listen();
+
+        } catch (Exception ex) {
+            return;
+        }
+
+    }
+
+    public static void loadServerConfigFromJSON(String fileName) throws Exception
     {
         JSONReader jsonReader=new JSONReader();
         try {
@@ -23,7 +37,7 @@ public class Server {
 
         }catch (Exception e)
         {
-
+            throw new JSONException("server config can not load");
         }
     }
 

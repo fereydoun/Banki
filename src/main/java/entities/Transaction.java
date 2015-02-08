@@ -101,16 +101,16 @@ public class Transaction implements Serializable {
 
     public String convertTransObjectToTransMsg(Transaction transaction)
     {
-        String message="";
-        message.concat("1");//set delimiter length
-        message.concat("^");//set delimiter identity
-        message.concat(String.valueOf(transaction.getTransactionID()));
-        message.concat("^");
-        message.concat(transaction.getOperationType());
-        message.concat("^");
-        message.concat(transaction.getAmount().toString());
-        message.concat("^");
-        message.concat(transaction.getDepositID());
+        String message;
+        message = "1";//set delimiter length
+        message += "^";//set delimiter identity
+        message += transaction.getTransactionID();
+        message += "^";
+        message += transaction.getOperationType();
+        message += "^";
+        message += transaction.getAmount().toString();
+        message += "^";
+        message += transaction.getDepositID();
 
         return message;
     }
@@ -132,11 +132,11 @@ public class Transaction implements Serializable {
     {
         Transaction transaction;
         try{
-            transaction=(Transaction)getInstance("Transaction");
-            transaction.setTransactionID(XMLReader.getIntValue(element,"id"));
-            transaction.setOperationType(XMLReader.getTextValue(element,"type"));
-            transaction.setAmount(XMLReader.getBigDecimalValue(element,"amount"));
-            transaction.setDepositID(XMLReader.getTextValue(element,"deposit"));
+            transaction=(Transaction)getInstance("entities.Transaction");
+            transaction.setTransactionID(XMLReader.getIntValueOfAttributeTag(element,"id"));
+            transaction.setOperationType(XMLReader.getStringValueOfAttributeTag(element,"type"));
+            transaction.setAmount(XMLReader.getBigDecimalValueOfAttributeTag(element,"amount"));
+            transaction.setDepositID(XMLReader.getStringValueOfAttributeTag(element,"deposit"));
 
         }catch (Exception ex)
         {

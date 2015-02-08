@@ -3,6 +3,7 @@ package entities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.math.BigDecimal;
@@ -26,6 +27,18 @@ public class XMLReader {
         }
 
         return dom;
+    }
+
+
+    public Node getFirstChild(Document dom) throws Exception
+    {
+        try {
+
+            return dom.getFirstChild();
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
     }
 
 
@@ -103,5 +116,35 @@ public class XMLReader {
             throw new Exception(ex.getMessage());
         }
 
+    }
+
+    public static int getIntValueOfAttributeTag(Element element,String attributeName) throws Exception
+    {
+        try {
+            return Integer.parseInt(getStringValueOfAttributeTag(element,attributeName));
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    public static BigDecimal getBigDecimalValueOfAttributeTag(Element element,String attributeName) throws Exception
+    {
+        try {
+            return new BigDecimal(getStringValueOfAttributeTag(element,attributeName));
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    public static String getStringValueOfAttributeTag(Element element,String attributeName) throws Exception
+    {
+        try {
+            return element.getAttributes().getNamedItem(attributeName).getNodeValue();
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
     }
 }

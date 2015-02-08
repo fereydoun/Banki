@@ -18,7 +18,7 @@ public class TransactionHandler {
         try {
             Element element = xmlReader.getDocumentElement(xmlReader.parseXmlFile(fileName));
 
-            NodeList transactionNode = xmlReader.getElementsByTagName(element, "transactions");
+            NodeList transactionNode = xmlReader.getElementsByTagName(element, "transaction");
 
             for (int i = 0; i < transactionNode.getLength(); i++) {
 
@@ -45,8 +45,16 @@ public class TransactionHandler {
 
     public void runTransactions(List<Transaction> transactions)
     {
+        Terminal terminal;
+        String transactionMessage;
+
         for (Transaction transaction:transactions)
         {
+
+            terminal=new Terminal();
+
+           transactionMessage = transaction.convertTransObjectToTransMsg(transaction);
+           terminal.sendRequestToServer(transactionMessage);
 
         }
     }
