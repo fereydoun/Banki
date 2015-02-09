@@ -16,7 +16,8 @@ public class Terminal {
     public static String terminalType;
     public static String terminalIP;
     public static int terminalPort;
-    public static String LOG_FILE_NAME="";
+    public static String LOG_FILE_NAME="src/main/resources/log/";
+
 
 
 
@@ -60,7 +61,7 @@ public class Terminal {
 
             NodeList terminalNode = xmlReader.getElementsByTagName(domElement,"outLog");
             element=(Element)terminalNode.item(0);
-            LOG_FILE_NAME = XMLReader.getStringValueOfAttributeTag(element,"path");
+            LOG_FILE_NAME += XMLReader.getStringValueOfAttributeTag(element,"path");
 
         } catch (Exception ex) {
             throw new XMLException("server config can not load");
@@ -71,7 +72,7 @@ public class Terminal {
     {
         String responseMessage ="";
         int bufferSize=32;
-        int timeOut = 5000;
+        int timeOut = 50000;
         byte[] byteBuffer=new byte[bufferSize];
         Socket socket;
 
@@ -86,14 +87,15 @@ public class Terminal {
             while ((inputStream.read(byteBuffer)) != -1)
             {
                 String s = new String(byteBuffer);
-                responseMessage.concat(s);
+                responseMessage += s;
+                //responseMessage.concat(s);
             }
 
         }catch (Exception ex)
         {
             LogBuilder.createLog(Terminal.LOG_FILE_NAME,ex.getMessage());
         }
-
+        System.out.println("res"+responseMessage);
         return responseMessage;
     }
 

@@ -1,10 +1,12 @@
 package entities;
 
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.Hashtable;
-import java.util.Map;
+
 
 public class DepositHandler {
 
@@ -29,7 +31,7 @@ public class DepositHandler {
                     deposit.setInitialBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setUpperBound(new BigDecimal(jsonDeposit.get("upperBound").toString()));
 
-                    Deposit.deposits.put(deposit.getDepositNumber(), deposit);
+                    Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
 
                 } catch (Exception ex) {
                     System.out.println();
@@ -42,4 +44,27 @@ public class DepositHandler {
         }
 
     }
+
+    public void executeClientRequest(Transaction transaction) throws  Exception
+    {
+        Class[] paramTransaction = new Class[1];
+        paramTransaction[0] = Transaction.class;
+
+        try
+        {
+            Class cls=Class.forName("entities.Deposit");
+            Object deposit= cls.newInstance();
+
+            //call related method base on request
+            Method method= cls.getDeclaredMethod(transaction.getOperationType(),paramTransaction);
+            method.invoke(deposit,transaction);
+
+        }catch (Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+
+
 }

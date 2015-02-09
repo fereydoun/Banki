@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 /**
  * Created by Dotin school 5 on 2/7/2015.
@@ -74,9 +75,13 @@ public class Transaction implements Serializable {
         Transaction transaction=new Transaction();
 
         String delimiter=getDelimiterFromMsg(receivedMessage);
-        String[] messages = receivedMessage.split(delimiter);
+        System.out.println(delimiter);
+
+        Pattern pattern=Pattern.compile(Pattern.quote(delimiter));
+        String[] messages=pattern.split(receivedMessage);
+
         if (messages.length != 5)
-            throw new MessageException("error in received message structure");
+            throw new MessageException(receivedMessage+messages.length+"1error in received message structure");
 
         try {
             transaction.setTransactionID(Integer.parseInt(messages[1]));
@@ -94,9 +99,9 @@ public class Transaction implements Serializable {
     public String getDelimiterFromMsg(String message)
     {
         int delimiterLen = Integer.parseInt(message.substring(0, 1));
+        int offset = delimiterLen + 1;
 
-
-        return message.substring(1,delimiterLen);
+        return message.substring(1,offset);
     }
 
     public String convertTransObjectToTransMsg(Transaction transaction)

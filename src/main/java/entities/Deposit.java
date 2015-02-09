@@ -1,5 +1,7 @@
 package entities;
 
+import exceptions.LowerBoundException;
+
 import java.math.BigDecimal;
 import java.util.Hashtable;
 import java.util.Map;
@@ -56,13 +58,28 @@ public class Deposit{
         this.upperBound = upperBound;
     }
 
-    public  void deposit(BigDecimal amount)
+    public synchronized   void deposit(Transaction transaction) throws Exception
     {
+       Deposit deposit =(Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
+
+       deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
+
+       if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1)
+            throw new LowerBoundException("account balance is greater than the allowable amount");
+
+      Deposit.deposits.replace(deposit.getDepositNumber(),deposit);
 
     }
 
-    public void withdraw(BigDecimal amount)
+    public synchronized void withdraw(Transaction transaction) throws Exception
     {
+        Deposit deposit =(Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
 
+        deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
+
+        if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1)
+            throw new LowerBoundException("account balance is not enough");
+
+        Deposit.deposits.replace(deposit.getDepositNumber(),deposit);
     }
 }

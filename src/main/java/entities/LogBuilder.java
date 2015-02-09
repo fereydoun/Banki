@@ -25,7 +25,7 @@ public class LogBuilder {
             if (new File(fileName).exists())
                 this.fileHandler = new FileHandler(fileName, true);
             else
-                this.fileHandler = new FileHandler(fileName);
+                this.fileHandler = new FileHandler(fileName,true);
 
             this.logger.addHandler(this.fileHandler);
             SimpleFormatter formatter = new SimpleFormatter();

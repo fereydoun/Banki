@@ -11,7 +11,7 @@ public class Server {
 
     public static String serverIP;
     public static int serverPort;
-    public static final String LOG_FILE_NAME ="ServerLog.log";
+    public static final String LOG_FILE_NAME ="src/main/resources/log/ServerLog.log";
 
     public void main() {
         DepositHandler depositHandler = new DepositHandler();
@@ -60,16 +60,16 @@ public class Server {
                             Socket socket = serverSocket.accept();
                             //create thread
                             ServerRunable serverRunable = new ServerRunable(socket);
-
-                            Thread thread = new Thread(serverRunable);
-                            thread.start();
+                            serverRunable.start();
+//                            Thread thread = new Thread(serverRunable);
+//                            thread.start();
 
                         } catch (Exception ex) {
                             //write to logger file
                         }
-                    }
+                    }//for (; ; )
 
-                }//for (; ; )
+                }
             };
 
             Thread serverThread=new Thread(runnable);
