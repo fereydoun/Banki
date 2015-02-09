@@ -46,11 +46,10 @@ public class Server {
 
                 Socket socket = serverSocket.accept();
                 ServerRunable serverRunable = new ServerRunable(socket);
-                //serverRunable.start();
-                serverRunable.run1();
+                serverRunable.start();
             } catch (Exception ex) {
-
-                LogBuilder.createLog(Server.LOG_FILE_NAME, ex.getMessage());
+                LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
+                logBuilder.writeToLog(ex.getMessage());
             }
         }
     }

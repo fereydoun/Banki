@@ -8,7 +8,7 @@ public class LogBuilder{
 
     private Logger logger= Logger.getLogger("dotin");
 
-    private LogBuilder(String fileName){
+    public LogBuilder(String fileName){
         createFile(fileName);
     }
 
@@ -17,7 +17,7 @@ public class LogBuilder{
         FileHandler fileHandler;
         try {
             if (new File(fileName).exists())
-                fileHandler = new FileHandler(fileName, true);
+                fileHandler = new FileHandler(fileName);
             else
                 fileHandler = new FileHandler(fileName,true);
             this.logger.addHandler(fileHandler);
@@ -28,15 +28,15 @@ public class LogBuilder{
         }
     }
 
-    private void writeToLog(String text){
+    public void writeToLog(String text){
         this.logger.info(text);
     }
 
-    public static synchronized void createLog(String logFileName,String text)//thread safe
-    {
-        LogBuilder logBuilder=new LogBuilder(logFileName);
-        logBuilder.writeToLog(text);
-
-    }
+//    public static  void createLog(String logFileName,String text)//thread safe
+//    {
+//        LogBuilder logBuilder=new LogBuilder(logFileName);
+//        logBuilder.writeToLog(text);
+//
+//    }
 
 }

@@ -70,7 +70,7 @@ public class Transaction implements Serializable {
         System.out.println(delimiter);
         Pattern pattern=Pattern.compile(Pattern.quote(delimiter));
         String[] messages=pattern.split(receivedMessage);
-        if (messages.length != 5)
+        if (messages.length != 6)
             throw new MessageException(receivedMessage+messages.length+"1error in received message structure");
 
         try {
@@ -104,6 +104,8 @@ public class Transaction implements Serializable {
         message += transaction.getAmount().toString();
         message += "^";
         message += transaction.getDepositID();
+        message += "^";
+        message += "#EXIT#";
 
         return message;
     }

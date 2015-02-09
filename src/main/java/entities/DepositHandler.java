@@ -18,9 +18,9 @@ public class DepositHandler {
             JSONArray jsonDeposits = (JSONArray) jsonObject.get("deposits");
 
             for (int i = 0; i < jsonDeposits.toArray().length; i++) {
-                deposit = new Deposit();
-                try {
 
+                try {
+                    deposit = new Deposit();
                     JSONObject jsonDeposit = (JSONObject) jsonDeposits.toArray()[i];
                     deposit.setDepositNumber(jsonDeposit.get("id").toString());
                     deposit.setCustomerNumber(jsonDeposit.get("customer").toString());
@@ -28,38 +28,32 @@ public class DepositHandler {
                     deposit.setInitialBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setUpperBound(new BigDecimal(jsonDeposit.get("upperBound").toString()));
 
-                    if (Deposit.deposits.containsKey(deposit.getDepositNumber().trim()))
+                    if (!Deposit.deposits.containsKey(deposit.getDepositNumber().trim()))
                         Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
                 } catch (Exception ex) {
                     System.out.println();
                 }
-
-
             }
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }
-
     }
 
     public void executeClientRequest(Transaction transaction) throws  Exception
     {
         Class[] paramTransaction = new Class[1];
         paramTransaction[0] = Transaction.class;
-        try
-        {
+//        try
+//        {
             Class cls=Class.forName("entities.Deposit");
             Object deposit= cls.newInstance();
             //call related method base on request
             Method method= cls.getDeclaredMethod(transaction.getOperationType(),paramTransaction);
             method.invoke(deposit,transaction);
 
-        }catch (Exception ex)
-        {   transaction.setResult(transaction.getOperationType() + "  failed");
-            throw new Exception(ex.getMessage());
-        }
+//        }catch (Exception ex)
+//        {   transaction.setResult(transaction.getOperationType() + "  failed");
+//            throw new Exception(ex.getMessage());
+//        }
     }
-
-
-
 }

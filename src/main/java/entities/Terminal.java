@@ -67,9 +67,10 @@ public class Terminal {
             }
         }catch (Exception ex)
         {
-            LogBuilder.createLog(Terminal.LOG_FILE_NAME,ex.getMessage());
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
         }
-        System.out.println("res"+responseMessage);
+        System.out.println(responseMessage);
         return responseMessage;
     }
 

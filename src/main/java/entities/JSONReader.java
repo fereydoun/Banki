@@ -30,7 +30,6 @@ public class JSONReader {
             e.printStackTrace();
             throw new ParseException(e.getPosition());
         }
-
         return jsonObject;
     }
 }

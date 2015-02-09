@@ -1,14 +1,9 @@
 package entities;
-
 import exceptions.LowerBoundException;
-
 import java.math.BigDecimal;
 import java.util.Hashtable;
 import java.util.Map;
 
-/**
- * Created by Dotin school 5 on 2/7/2015.
- */
 public class Deposit{
 
     private String depositNumber;
@@ -59,41 +54,31 @@ public class Deposit{
     }
 
 
-    public   void deposit(Transaction transaction) throws Exception {
+    public   void deposit(Transaction transaction) throws Exception{
 
-
-        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())) {
+        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())){
 
             Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
             deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
-
-            if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1)
-                throw new LowerBoundException("account balance is greater than the allowable amount");
-
-            Deposit.deposits.replace(deposit.getDepositNumber(), deposit);
-
+            if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1){
+                transaction.setResult("account balance is greater than the allowable amount");
+                throw new LowerBoundException(transaction.getResult());
+            }
             transaction.setResult("Deposit Success");
         }
-
-
     }
 
-    public  void withdraw(Transaction transaction) throws Exception {
+    public  void withdraw(Transaction transaction) throws Exception{
 
-
-        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())) {
+        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())){
 
             Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
             deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
-
-            if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1)
-                throw new LowerBoundException("account balance is not enough");
-
-            Deposit.deposits.replace(deposit.getDepositNumber(), deposit);
-
+            if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1){
+                transaction.setResult("account balance is not enough");
+                throw new LowerBoundException(transaction.getResult());
+            }
             transaction.setResult("Withdraw Success");
         }
-
-
     }
 }
