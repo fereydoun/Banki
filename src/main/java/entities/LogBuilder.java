@@ -1,43 +1,34 @@
 package entities;
-
-
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class LogBuilder {
+public class LogBuilder{
 
     private Logger logger= Logger.getLogger("dotin");
-    private FileHandler fileHandler;
 
-    private LogBuilder(String fileName)
-    {
+    private LogBuilder(String fileName){
         createFile(fileName);
     }
 
-
     // This method configure the logger with handler and formatter
-    private   void  createFile(String fileName) {
+    private void createFile(String fileName){
+        FileHandler fileHandler;
         try {
-
             if (new File(fileName).exists())
-                this.fileHandler = new FileHandler(fileName, true);
+                fileHandler = new FileHandler(fileName, true);
             else
-                this.fileHandler = new FileHandler(fileName,true);
-
-            this.logger.addHandler(this.fileHandler);
+                fileHandler = new FileHandler(fileName,true);
+            this.logger.addHandler(fileHandler);
             SimpleFormatter formatter = new SimpleFormatter();
-            this.fileHandler.setFormatter(formatter);
-
+            fileHandler.setFormatter(formatter);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private   void writeToLog(String text)
-    {
+    private void writeToLog(String text){
         this.logger.info(text);
     }
 

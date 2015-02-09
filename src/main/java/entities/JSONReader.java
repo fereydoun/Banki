@@ -17,27 +17,20 @@ public class JSONReader {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject;
         try {
-
             Object object = jsonParser.parse(new FileReader(fileName));
             jsonObject=(JSONObject)object;
 
-        }catch (FileNotFoundException e)
-        {
+        }catch (FileNotFoundException e){
             e.printStackTrace();
             throw new FileNotFoundException(e.getMessage());
-
-        }catch (IOException e)
-        {
+        }catch (IOException e){
             e.printStackTrace();
             throw new IOException(e.getMessage());
-
-        }catch (ParseException e)
-        {
+        }catch (ParseException e){
             e.printStackTrace();
             throw new ParseException(e.getPosition());
         }
 
         return jsonObject;
-
     }
 }

@@ -1,16 +1,10 @@
 package entities;
-
 import exceptions.MessageException;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-/**
- * Created by Dotin school 5 on 2/7/2015.
- */
 public class Transaction implements Serializable {
 
     private int transactionID;
@@ -18,7 +12,6 @@ public class Transaction implements Serializable {
     private String operationType;
     private BigDecimal amount;
     private String result;
-
     private Terminal terminal;
 
     public int getTransactionID() {
@@ -69,17 +62,14 @@ public class Transaction implements Serializable {
         this.terminal = terminal;
     }
 
-
     public Transaction convertTransMsgToTransObject(String receivedMessage) throws Exception
     {
         Transaction transaction=new Transaction();
 
         String delimiter=getDelimiterFromMsg(receivedMessage);
         System.out.println(delimiter);
-
         Pattern pattern=Pattern.compile(Pattern.quote(delimiter));
         String[] messages=pattern.split(receivedMessage);
-
         if (messages.length != 5)
             throw new MessageException(receivedMessage+messages.length+"1error in received message structure");
 
@@ -88,11 +78,9 @@ public class Transaction implements Serializable {
             transaction.setOperationType(messages[2]);
             transaction.setAmount(new BigDecimal(messages[3]));
             transaction.setDepositID(messages[4]);
-        }catch (Exception e)
-        {
+        }catch (Exception e){
             throw new MessageException(e.getMessage());
         }
-
         return transaction;
     }
 
@@ -124,11 +112,9 @@ public class Transaction implements Serializable {
     {
         try {
             Class classDefinition = Class.forName(className);
-
             return classDefinition.newInstance();
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
     }
@@ -142,14 +128,12 @@ public class Transaction implements Serializable {
             transaction.setOperationType(XMLReader.getStringValueOfAttributeTag(element,"type"));
             transaction.setAmount(XMLReader.getBigDecimalValueOfAttributeTag(element,"amount"));
             transaction.setDepositID(XMLReader.getStringValueOfAttributeTag(element,"deposit"));
-
         }catch (Exception ex)
         {
             throw new Exception(ex.getMessage());
         }
 
         return transaction;
-
     }
 
 }

@@ -1,15 +1,11 @@
 package exceptions;
 
+public class FileException extends Exception{
 
-public class FileException extends Exception {
-
-    public FileException()
-    {
-
+    public FileException(){
     }
 
-    public FileException(String s)
-    {
+    public FileException(String s){
         super(s);
     }
 }

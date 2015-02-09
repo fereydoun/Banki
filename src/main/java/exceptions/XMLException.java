@@ -1,17 +1,13 @@
 package exceptions;
 
-/**
- * Created by Dotin school 5 on 2/8/2015.
- */
-public class XMLException extends FileException {
+public class XMLException extends FileException{
 
-    public XMLException()
-    {}
+    public XMLException(){
 
-    public XMLException(String s)
-    {
+    }
+
+    public XMLException(String s){
         super(s);
-
-
+        System.out.println(s);
     }
 }

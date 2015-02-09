@@ -15,48 +15,37 @@ public class XMLReader {
     {
         Document dom ;
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-
         try{
-
             DocumentBuilder docBuilder=docBuilderFactory.newDocumentBuilder();
             dom = docBuilder.parse(fileName);
-
         }
-        catch (Exception ex)   {
+        catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
 
         return dom;
     }
 
-
     public Node getFirstChild(Document dom) throws Exception
     {
         try {
-
             return dom.getFirstChild();
-        }catch (Exception ex)
-        {
+        }catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
     }
 
-
     //get elements from  Document of xml file
     public Element getDocumentElement(Document dom) throws Exception
     {
-
         try {
-
             //get the root element
             return dom.getDocumentElement();
         }catch (Exception ex)
         {
             throw new Exception(ex.getMessage());
         }
-
     }
-
 
     //get node list of Element by tag name
     public NodeList getElementsByTagName(Element docElement,String tagName) throws Exception
@@ -65,57 +54,9 @@ public class XMLReader {
         {
             //get the nodelist of elements
             return  docElement.getElementsByTagName(tagName);
-
-        }catch (Exception ex)
-        {
+        }catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
-
-    }
-
-
-    //return String tag types
-    public static String  getTextValue(Element element,String tagName) throws Exception
-    {
-        try {
-
-            NodeList nodeList = element.getElementsByTagName(tagName);
-            if (nodeList != null && nodeList.getLength() > 0)
-                return nodeList.item(0).getFirstChild().getNodeValue();
-        }catch (Exception ex)
-        {
-            throw new Exception(ex.getMessage());
-        }
-
-
-        return "";
-    }
-
-
-    //return int tag types
-    public static int getIntValue(Element element,String tagName) throws Exception {
-        try {
-
-            return Integer.parseInt(getTextValue(element, tagName));
-
-        } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
-        }
-    }
-
-
-    //return BigDecimal tag types
-    public static BigDecimal getBigDecimalValue(Element element,String tagName) throws Exception
-    {
-        try
-        {
-            return new BigDecimal(getTextValue(element,tagName));
-
-        }catch (Exception ex)
-        {
-            throw new Exception(ex.getMessage());
-        }
-
     }
 
     public static int getIntValueOfAttributeTag(Element element,String attributeName) throws Exception

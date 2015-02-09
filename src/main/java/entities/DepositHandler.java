@@ -13,10 +13,7 @@ public class DepositHandler {
     public void loadDepositsFromJSONFile(String fileName) throws Exception {
         JSONReader jsonReader = new JSONReader();
         Deposit deposit;
-
         try {
-
-
             JSONObject jsonObject = jsonReader.readJSONFile(fileName);
             JSONArray jsonDeposits = (JSONArray) jsonObject.get("deposits");
 
@@ -31,8 +28,8 @@ public class DepositHandler {
                     deposit.setInitialBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setUpperBound(new BigDecimal(jsonDeposit.get("upperBound").toString()));
 
-                    Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
-
+                    if (Deposit.deposits.containsKey(deposit.getDepositNumber().trim()))
+                        Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
                 } catch (Exception ex) {
                     System.out.println();
                 }
@@ -49,18 +46,16 @@ public class DepositHandler {
     {
         Class[] paramTransaction = new Class[1];
         paramTransaction[0] = Transaction.class;
-
         try
         {
             Class cls=Class.forName("entities.Deposit");
             Object deposit= cls.newInstance();
-
             //call related method base on request
             Method method= cls.getDeclaredMethod(transaction.getOperationType(),paramTransaction);
             method.invoke(deposit,transaction);
 
         }catch (Exception ex)
-        {
+        {   transaction.setResult(transaction.getOperationType() + "  failed");
             throw new Exception(ex.getMessage());
         }
     }

@@ -58,28 +58,42 @@ public class Deposit{
         this.upperBound = upperBound;
     }
 
-    public synchronized   void deposit(Transaction transaction) throws Exception
-    {
-       Deposit deposit =(Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
 
-       deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
+    public   void deposit(Transaction transaction) throws Exception {
 
-       if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1)
-            throw new LowerBoundException("account balance is greater than the allowable amount");
 
-      Deposit.deposits.replace(deposit.getDepositNumber(),deposit);
+        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())) {
+
+            Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
+            deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
+
+            if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1)
+                throw new LowerBoundException("account balance is greater than the allowable amount");
+
+            Deposit.deposits.replace(deposit.getDepositNumber(), deposit);
+
+            transaction.setResult("Deposit Success");
+        }
+
 
     }
 
-    public synchronized void withdraw(Transaction transaction) throws Exception
-    {
-        Deposit deposit =(Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
+    public  void withdraw(Transaction transaction) throws Exception {
 
-        deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
 
-        if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1)
-            throw new LowerBoundException("account balance is not enough");
+        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())) {
 
-        Deposit.deposits.replace(deposit.getDepositNumber(),deposit);
+            Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
+            deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
+
+            if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1)
+                throw new LowerBoundException("account balance is not enough");
+
+            Deposit.deposits.replace(deposit.getDepositNumber(), deposit);
+
+            transaction.setResult("Withdraw Success");
+        }
+
+
     }
 }
