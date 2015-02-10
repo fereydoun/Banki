@@ -1,11 +1,8 @@
 package entities;
-
-
 import exceptions.XMLException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -26,7 +23,8 @@ public class Terminal {
            TransactionHandler transactionHandler=new TransactionHandler();
            transactionHandler.runTransactions(transactionHandler.loadTransactionsFromXML("src/main/resources/terminal.xml"));
         }catch (Exception ex){
-            ex.printStackTrace();
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
         }
     }
 
@@ -36,8 +34,7 @@ public class Terminal {
         try {
             Element domElement = xmlReader.getDocumentElement(xmlReader.parseXmlFile(fileName));
             Node rootNode = xmlReader.getFirstChild(xmlReader.parseXmlFile(fileName));
-            //get root attribute
-            Element element=(Element)rootNode;
+            Element element=(Element)rootNode;//get root attribute
             terminalID = XMLReader.getStringValueOfAttributeTag(element,"id");
             terminalType = XMLReader.getStringValueOfAttributeTag(element,"type");
             NodeList terminalNode = xmlReader.getElementsByTagName(domElement,"outLog");
@@ -45,7 +42,7 @@ public class Terminal {
             LOG_FILE_NAME += XMLReader.getStringValueOfAttributeTag(element,"path");
 
         } catch (Exception ex) {
-            throw new XMLException("server config can not load");
+            throw new XMLException("server config can not load",Terminal.LOG_FILE_NAME);
         }
     }
 
@@ -55,10 +52,8 @@ public class Terminal {
         int bufferSize=64;
         byte[] byteBuffer=new byte[bufferSize];
         Socket socket;
-
         try {
             socket = new Socket(ServerConfig.serverIP,ServerConfig.serverPort);
-            //socket.setSoTimeout(timeOut);
             InputStream inputStream=socket.getInputStream();
             OutputStream outputStream=socket.getOutputStream();
             outputStream.write(requestString.getBytes());//send message to server
@@ -67,7 +62,6 @@ public class Terminal {
             {
                 String s = new String(byteBuffer);
                 responseMessage += s.trim();
-
                 String patternExit = responseMessage.substring(responseMessage.length() - END_OF_MSG_LEN);
                 if(patternExit.trim().compareTo(END_OF_MSG.trim()) == 0)
                     completed=true;
@@ -76,7 +70,6 @@ public class Terminal {
             LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
         }
-
         return responseMessage;
     }
 
@@ -93,7 +86,8 @@ public class Terminal {
 
             xmlBuilder.writeToXMLFile();
         } catch (Exception ex) {
-
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
         }
     }
 }

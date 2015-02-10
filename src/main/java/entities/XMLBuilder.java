@@ -1,10 +1,8 @@
 package entities;
-
 import exceptions.XMLException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -18,10 +16,11 @@ public class XMLBuilder {
     private Document document;
     private String fileName;
 
-    public XMLBuilder(String fileName) throws Exception
+    public  XMLBuilder(String fileName) throws Exception
     {
         if (fileName == "")
-            throw new XMLException("File name is empty");
+            throw new XMLException("File name is empty",Terminal.LOG_FILE_NAME);
+
         this.fileName = fileName;
         createDocument(fileName);
     }
@@ -70,16 +69,18 @@ public class XMLBuilder {
         return attr;
     }
 
-    public void writeToXMLFile() throws Exception{
+    public void writeToXMLFile() throws Exception {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            DOMSource domSource=new DOMSource(this.document);
-            StreamResult streamResult=new StreamResult(new File(this.fileName));
-            transformer.transform(domSource,streamResult);
+            DOMSource domSource = new DOMSource(this.document);
+            StreamResult streamResult = new StreamResult(new File(this.fileName));
+            synchronized (streamResult) {
+                transformer.transform(domSource, streamResult);
+            }
 
         } catch (Exception ex) {
-            throw new XMLException("Error in write to file");
+            throw new XMLException("Error in write to file", Terminal.LOG_FILE_NAME);
         }
     }
 

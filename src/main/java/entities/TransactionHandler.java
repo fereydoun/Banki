@@ -22,7 +22,7 @@ public class TransactionHandler {
                     transaction = transaction.getInitializedTransObjectByElementValues(transactionElement);
                     transactions.add(transaction);
                 }catch (Exception ex){
-                    LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
+                    LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
                     logBuilder.writeToLog(ex.getMessage());
                 }
             }

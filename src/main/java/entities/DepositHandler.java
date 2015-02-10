@@ -1,16 +1,12 @@
 package entities;
-
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
-
 public class DepositHandler {
 
-    public void loadDepositsFromJSONFile(String fileName) throws Exception {
+    public void loadDepositsFromJSONFile(String fileName) throws Exception{
         JSONReader jsonReader = new JSONReader();
         Deposit deposit;
         try {
@@ -31,7 +27,8 @@ public class DepositHandler {
                     if (!Deposit.deposits.containsKey(deposit.getDepositNumber().trim()))
                         Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
                 } catch (Exception ex) {
-                    System.out.println();
+                    LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
+                    logBuilder.writeToLog(ex.getMessage());
                 }
             }
         } catch (Exception ex) {
@@ -39,21 +36,12 @@ public class DepositHandler {
         }
     }
 
-    public void executeClientRequest(Transaction transaction) throws  Exception
-    {
+    public void executeClientRequest(Transaction transaction) throws Exception{
         Class[] paramTransaction = new Class[1];
         paramTransaction[0] = Transaction.class;
-//        try
-//        {
-            Class cls=Class.forName("entities.Deposit");
-            Object deposit= cls.newInstance();
-            //call related method base on request
-            Method method= cls.getDeclaredMethod(transaction.getOperationType(),paramTransaction);
-            method.invoke(deposit,transaction);
-
-//        }catch (Exception ex)
-//        {   transaction.setResult(transaction.getOperationType() + "  failed");
-//            throw new Exception(ex.getMessage());
-//        }
+        Class cls = Class.forName("entities.Deposit");
+        Object deposit = cls.newInstance();
+        Method method = cls.getDeclaredMethod(transaction.getOperationType(), paramTransaction);//call related method base on request
+        method.invoke(deposit, transaction);
     }
 }

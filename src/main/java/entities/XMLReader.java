@@ -1,5 +1,4 @@
 package entities;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -22,7 +21,6 @@ public class XMLReader {
         catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
-
         return dom;
     }
 

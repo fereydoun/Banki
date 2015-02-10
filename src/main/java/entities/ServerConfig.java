@@ -17,7 +17,7 @@ public class ServerConfig {
             serverIP=XMLReader.getStringValueOfAttributeTag(element,"ip");
             serverPort=XMLReader.getIntValueOfAttributeTag(element,"port");
         } catch (Exception ex) {
-            throw new XMLException("server config can not load");
+            throw new XMLException("server config can not load",Terminal.LOG_FILE_NAME);
         }
     }
 }

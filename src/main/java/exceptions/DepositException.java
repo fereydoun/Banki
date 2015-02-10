@@ -1,4 +1,5 @@
 package exceptions;
+import entities.LogBuilder;
 
 public class DepositException extends Exception {
 
@@ -7,10 +8,10 @@ public class DepositException extends Exception {
         super();
     }
 
-    public DepositException(String s)
+    public DepositException(String s,String logFileName)
     {
         super(s);
-
-        System.out.println(s);
+        LogBuilder logBuilder=new LogBuilder(logFileName);
+        logBuilder.writeToLog(s);
     }
 }

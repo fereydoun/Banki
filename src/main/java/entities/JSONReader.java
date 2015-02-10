@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class JSONReader {
 
-    public JSONObject readJSONFile(String fileName) throws Exception
+    public  JSONObject readJSONFile(String fileName) throws Exception
     {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject;

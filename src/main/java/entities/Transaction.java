@@ -65,13 +65,11 @@ public class Transaction implements Serializable {
     public Transaction convertTransMsgToTransObject(String receivedMessage) throws Exception
     {
         Transaction transaction=new Transaction();
-
         String delimiter=getDelimiterFromMsg(receivedMessage);
-        System.out.println(delimiter);
         Pattern pattern=Pattern.compile(Pattern.quote(delimiter));
         String[] messages=pattern.split(receivedMessage);
         if (messages.length != 6)
-            throw new MessageException(receivedMessage+messages.length+"1error in received message structure");
+            throw new MessageException("error in received message structure",Server.LOG_FILE_NAME);
 
         try {
             transaction.setTransactionID(Integer.parseInt(messages[1]));
@@ -79,7 +77,7 @@ public class Transaction implements Serializable {
             transaction.setAmount(new BigDecimal(messages[3]));
             transaction.setDepositID(messages[4]);
         }catch (Exception e){
-            throw new MessageException(e.getMessage());
+            throw new MessageException(e.getMessage(),Server.LOG_FILE_NAME);
         }
         return transaction;
     }

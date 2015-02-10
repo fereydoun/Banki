@@ -62,7 +62,7 @@ public class Deposit{
             deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
             if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1){
                 transaction.setResult("account balance is greater than the allowable amount");
-                throw new LowerBoundException(transaction.getResult());
+                throw new LowerBoundException(transaction.getResult(),Server.LOG_FILE_NAME);
             }
             transaction.setResult("Deposit Success");
         }
@@ -76,7 +76,7 @@ public class Deposit{
             deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
             if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1){
                 transaction.setResult("account balance is not enough");
-                throw new LowerBoundException(transaction.getResult());
+                throw new LowerBoundException(transaction.getResult(),Server.LOG_FILE_NAME);
             }
             transaction.setResult("Withdraw Success");
         }

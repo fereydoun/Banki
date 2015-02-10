@@ -1,17 +1,16 @@
 package entities;
-
 import exceptions.JSONException;
 import org.json.simple.JSONObject;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 
+public class Server{
 
-public class Server {
-
-    public static String serverIP;
     public static int serverPort;
     public static final String LOG_FILE_NAME = "src/main/resources/log/ServerLog.log";
+    public static final int BUFFER_SIZE = 64;  //size of receiver buffer
+    public static final String END_OF_MSG = "#EXIT#";
+    public static final int END_OF_MSG_LEN = 6;
 
     public void main(){
         DepositHandler depositHandler = new DepositHandler();
@@ -20,7 +19,8 @@ public class Server {
             depositHandler.loadDepositsFromJSONFile("src/main/resources/core.json");
             Listen();
         }catch (Exception ex) {
-            return;
+            LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
         }
     }
 
@@ -30,16 +30,18 @@ public class Server {
             JSONObject jsonObject = jsonReader.readJSONFile(fileName);
             serverPort = Integer.parseInt(jsonObject.get("port").toString());
         } catch (Exception e) {
-            throw new JSONException("server config can not load");
+            throw new JSONException("server config can not load",Server.LOG_FILE_NAME);
         }
     }
 
-
     public void Listen(){
         ServerSocket serverSocket;
+        
         try {
             serverSocket= new ServerSocket(Server.serverPort);
-        }catch (Exception ex){return;}
+        }catch (Exception ex){
+            return;
+        }
 
         while(true) {
             try {
@@ -53,6 +55,4 @@ public class Server {
             }
         }
     }
-
-
 }

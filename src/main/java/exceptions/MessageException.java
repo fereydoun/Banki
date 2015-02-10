@@ -1,4 +1,5 @@
 package exceptions;
+import entities.LogBuilder;
 
 public class MessageException extends Exception {
 
@@ -6,8 +7,9 @@ public class MessageException extends Exception {
 
     }
 
-    public MessageException(String s){
+    public MessageException(String s,String logFileName){
         super(s);
-        System.out.println(s);
+        LogBuilder logBuilder=new LogBuilder(logFileName);
+        logBuilder.writeToLog(s);
     }
 }

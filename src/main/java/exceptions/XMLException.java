@@ -6,8 +6,7 @@ public class XMLException extends FileException{
 
     }
 
-    public XMLException(String s){
-        super(s);
-        System.out.println(s);
+    public XMLException(String s,String logFileName){
+        super(s,logFileName);
     }
 }

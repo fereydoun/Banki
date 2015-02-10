@@ -5,9 +5,8 @@ public class LowerBoundException  extends DepositException {
     public LowerBoundException(){
     }
 
-    public LowerBoundException(String s){
+    public LowerBoundException(String s,String logFileName){
 
-        super(s);
-        System.out.println(s);
+        super(s,logFileName);
     }
 }

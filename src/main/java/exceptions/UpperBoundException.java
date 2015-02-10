@@ -6,8 +6,7 @@ public class UpperBoundException extends DepositException{
 
     }
 
-    public UpperBoundException(String s){
-        super(s);
-        System.out.println(s);
+    public UpperBoundException(String s,String logFileName){
+        super(s,logFileName);
     }
 }
