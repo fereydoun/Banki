@@ -1,8 +1,7 @@
 package entities;
 import exceptions.LowerBoundException;
 import java.math.BigDecimal;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Deposit{
 
@@ -11,7 +10,7 @@ public class Deposit{
     private BigDecimal balance;
     private BigDecimal initialBalance;
     private BigDecimal upperBound;
-    public static Map deposits=new Hashtable();
+    public static ArrayList<Deposit> deposits=new ArrayList<Deposit>();
 
     public String getDepositNumber() {
         return  depositNumber;
@@ -54,31 +53,39 @@ public class Deposit{
     }
 
 
-    public   void deposit(Transaction transaction) throws Exception{
+    public   void deposit(Transaction transaction) throws Exception {
 
-        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())){
+        for (Deposit deposit : Deposit.deposits) {
+            if (deposit.getDepositNumber().trim().equals(transaction.getDepositID().trim())) {
 
-            Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
-            deposit.setBalance(deposit.balance.add(transaction.getAmount()));//add to deposit
-            if (deposit.getBalance().compareTo(deposit.getUpperBound()) == 1){
-                transaction.setResult("account balance is greater than the allowable amount");
-                throw new LowerBoundException(transaction.getResult(),Server.LOG_FILE_NAME);
+                if (deposit.getBalance().add(transaction.getAmount()).compareTo(deposit.getUpperBound()) == 1) {
+                    transaction.setResult("account balance is greater than the allowable amount");
+                    throw new LowerBoundException(transaction.getResult(), Server.LOG_FILE_NAME);
+                }else{
+                    synchronized (deposit) {
+                        deposit.setBalance(deposit.getBalance().add(transaction.getAmount()));//add to deposit
+                    }
+                }
+                transaction.setResult("Deposit Success");
             }
-            transaction.setResult("Deposit Success");
         }
     }
 
-    public  void withdraw(Transaction transaction) throws Exception{
+    public  void withdraw(Transaction transaction) throws Exception {
 
-        synchronized (Deposit.deposits.get(transaction.getDepositID().trim())){
+        for (Deposit deposit : Deposit.deposits) {
+            if (deposit.getDepositNumber().trim().equals(transaction.getDepositID().trim())) {
 
-            Deposit deposit = (Deposit) Deposit.deposits.get(transaction.getDepositID().trim());
-            deposit.setBalance(deposit.balance.subtract(transaction.getAmount()));//subtract from deposit
-            if (deposit.getBalance().compareTo(BigDecimal.ZERO) == -1){
-                transaction.setResult("account balance is not enough");
-                throw new LowerBoundException(transaction.getResult(),Server.LOG_FILE_NAME);
+                if (deposit.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) == -1) {
+                    transaction.setResult("account balance is not enough");
+                    throw new LowerBoundException(transaction.getResult(), Server.LOG_FILE_NAME);
+                } else {
+                    synchronized (deposit) {
+                        deposit.setBalance(deposit.getBalance().subtract(transaction.getAmount()));//subtract from deposit
+                    }
+                }
+                transaction.setResult("Withdraw Success");
             }
-            transaction.setResult("Withdraw Success");
         }
     }
 }

@@ -23,9 +23,8 @@ public class DepositHandler {
                     deposit.setBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setInitialBalance(new BigDecimal(jsonDeposit.get("initialBalance").toString()));
                     deposit.setUpperBound(new BigDecimal(jsonDeposit.get("upperBound").toString()));
+                    Deposit.deposits.add(deposit);
 
-                    if (!Deposit.deposits.containsKey(deposit.getDepositNumber().trim()))
-                        Deposit.deposits.put(deposit.getDepositNumber().trim(), deposit);
                 } catch (Exception ex) {
                     LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
                     logBuilder.writeToLog(ex.getMessage());
