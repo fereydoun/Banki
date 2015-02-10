@@ -73,20 +73,23 @@ public class Terminal {
         return responseMessage;
     }
 
-    public void writeReponseToXML(Transaction transaction){
-        Element tag;
+    public void writeReponseToXML(Transaction transaction) {
+
+        Element tag ;
         try {
             XMLBuilder xmlBuilder = new XMLBuilder(Terminal.RESPONSE_FILE_NAME);
-            tag = xmlBuilder.addTag("response");
-            xmlBuilder.createAttribute(tag,"terminalID",Terminal.terminalID);
-            xmlBuilder.createAttribute(tag,"terminalType",Terminal.terminalType);
-            tag = xmlBuilder.addTag(tag,transaction.getOperationType(),transaction.getResult());
-            xmlBuilder.createAttribute(tag,"transactionId",String.valueOf(transaction.getTransactionID()));
-            xmlBuilder.createAttribute(tag,"depositNumber",String.valueOf(transaction.getDepositID()));
+            if ((tag = xmlBuilder.getRootTag()) == null) {
+                tag = xmlBuilder.addTag("response");
+                xmlBuilder.createAttribute(tag, "terminalID", Terminal.terminalID);
+                xmlBuilder.createAttribute(tag, "terminalType", Terminal.terminalType);
+            }
+            tag = xmlBuilder.addTag(tag, transaction.getOperationType(), transaction.getResult());
+            xmlBuilder.createAttribute(tag, "transactionId", String.valueOf(transaction.getTransactionID()));
+            xmlBuilder.createAttribute(tag, "depositNumber", String.valueOf(transaction.getDepositID()));
 
             xmlBuilder.writeToXMLFile();
         } catch (Exception ex) {
-            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            LogBuilder logBuilder = new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
         }
     }

@@ -1,8 +1,7 @@
 package entities;
 import exceptions.XMLException;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -37,6 +36,16 @@ public class XMLBuilder {
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
+    }
+
+    public Element getRootTag() {
+        Element root = null;
+        try {
+            root = this.document.getDocumentElement();
+        } catch (Exception ex) {
+            System.out.println();
+        }
+        return root;
     }
 
     public Element addTag(String tagName){

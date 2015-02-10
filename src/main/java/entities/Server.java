@@ -35,8 +35,8 @@ public class Server{
     }
 
     public void Listen(){
+
         ServerSocket serverSocket;
-        
         try {
             serverSocket= new ServerSocket(Server.serverPort);
         }catch (Exception ex){
