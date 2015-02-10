@@ -32,15 +32,16 @@ public class TransactionHandler {
         return transactions;
     }
 
-    public void runTransactions(List<Transaction> transactions){
+    public void runTransactions(List<Transaction> transactions) {
         Terminal terminal;
         String transactionMessage;
-        for (Transaction transaction:transactions)
-        {
-            terminal=new Terminal();
-           transactionMessage = transaction.convertTransObjectToTransMsg(transaction);
-           terminal.sendRequestToServer(transactionMessage);
-
+        String responseMessage;
+        for (Transaction transaction : transactions) {
+            terminal = new Terminal();
+            transactionMessage = transaction.convertTransObjectToTransMsg(transaction);
+            responseMessage = terminal.sendRequestToServer(transactionMessage);
+            transaction.setResult(responseMessage.substring(0,responseMessage.length()-Terminal.END_OF_MSG_LEN));//cut end of message #EXIT#
+            terminal.writeReponseToXML(transaction);
         }
     }
 }

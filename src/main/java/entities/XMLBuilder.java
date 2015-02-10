@@ -26,7 +26,7 @@ public class XMLBuilder {
         createDocument(fileName);
     }
 
-    public void createDocument(String fileName) throws Exception
+    private void createDocument(String fileName) throws Exception
     {
         try {
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
@@ -75,7 +75,7 @@ public class XMLBuilder {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource=new DOMSource(this.document);
-            StreamResult streamResult=new StreamResult();
+            StreamResult streamResult=new StreamResult(new File(this.fileName));
             transformer.transform(domSource,streamResult);
 
         } catch (Exception ex) {

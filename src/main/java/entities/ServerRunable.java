@@ -6,6 +6,8 @@ import java.net.Socket;
 public class ServerRunable implements Runnable{
 
     private static final int BUFFER_SIZE = 64;  //size of receiver buffer
+    private static final String END_OF_MSG = "#EXIT#";
+    private static final int END_OF_MSG_LEN = 6;
     private Socket socket;
 
     public ServerRunable(Socket socket){
@@ -27,27 +29,12 @@ public class ServerRunable implements Runnable{
         }
     }
 
-    public void run1() {
-//        Transaction transaction = new Transaction();
-//        try {
-//            DepositHandler depositHandler = new DepositHandler();
-//            transaction = transaction.convertTransMsgToTransObject(receiveMessage());
-//            depositHandler.executeClientRequest(transaction);
-//            sendMessage(transaction.getResult());
-//
-//        } catch (Exception ex) {
-//            sendMessage(transaction.getResult());
-//            LogBuilder.createLog(Server.LOG_FILE_NAME, ex.getMessage());
-//        }
-    }
-
     public void start(){
         Thread thread = new Thread(this);
         thread.start();
     }
 
     public String receiveMessage(){
-        String endOfMessage = "#EXIT#";
         String receivedMessage = "";
         byte[] byteBuffer = new byte[BUFFER_SIZE];
         boolean completed = false;
@@ -57,8 +44,8 @@ public class ServerRunable implements Runnable{
                 String s = new String(byteBuffer);
                 receivedMessage += s.trim();
 
-                String patternExit = receivedMessage.substring(receivedMessage.length() - 6);
-                if(patternExit.trim().compareTo(endOfMessage.trim()) == 0)
+                String patternExit = receivedMessage.substring(receivedMessage.length() - END_OF_MSG_LEN);
+                if(patternExit.trim().compareTo(END_OF_MSG.trim()) == 0)
                     completed=true;
             }
 
@@ -71,7 +58,7 @@ public class ServerRunable implements Runnable{
     public void sendMessage(String sendMessage){
         try {
             OutputStream outputStream = this.socket.getOutputStream();
-            outputStream.write(sendMessage.getBytes());
+            outputStream.write((sendMessage + END_OF_MSG.trim()).getBytes());
             this.socket.close();
         } catch (Exception ex) {
             System.out.println();

@@ -15,13 +15,15 @@ public class Terminal {
     public static String terminalID;
     public static String terminalType;
     public static String LOG_FILE_NAME="src/main/resources/log/";
+    public static String RESPONSE_FILE_NAME = "src/main/resources/response/response.xml";
+    public static final String END_OF_MSG = "#EXIT#";
+    public static final int END_OF_MSG_LEN = 6;
 
     public void main(){
-        try
-        {
+        try{
            ServerConfig.loadServerConfigFromXML("src/main/resources/terminal.xml");
            loadTerminalConfigFromXML("src/main/resources/terminal.xml");
-            TransactionHandler transactionHandler=new TransactionHandler();
+           TransactionHandler transactionHandler=new TransactionHandler();
            transactionHandler.runTransactions(transactionHandler.loadTransactionsFromXML("src/main/resources/terminal.xml"));
         }catch (Exception ex){
             ex.printStackTrace();
@@ -49,7 +51,8 @@ public class Terminal {
 
     public String sendRequestToServer(String requestString){
         String responseMessage ="";
-        int bufferSize=32;
+        boolean completed = false;
+        int bufferSize=64;
         byte[] byteBuffer=new byte[bufferSize];
         Socket socket;
 
@@ -60,24 +63,37 @@ public class Terminal {
             OutputStream outputStream=socket.getOutputStream();
             outputStream.write(requestString.getBytes());//send message to server
 
-            while ((inputStream.read(byteBuffer)) != -1)
+            while ((!completed) && (inputStream.read(byteBuffer)) != -1)
             {
                 String s = new String(byteBuffer);
-                responseMessage += s;
+                responseMessage += s.trim();
+
+                String patternExit = responseMessage.substring(responseMessage.length() - END_OF_MSG_LEN);
+                if(patternExit.trim().compareTo(END_OF_MSG.trim()) == 0)
+                    completed=true;
             }
-        }catch (Exception ex)
-        {
+        }catch (Exception ex){
             LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
         }
-        System.out.println(responseMessage);
+
         return responseMessage;
     }
 
+    public void writeReponseToXML(Transaction transaction){
+        Element tag;
+        try {
+            XMLBuilder xmlBuilder = new XMLBuilder(Terminal.RESPONSE_FILE_NAME);
+            tag = xmlBuilder.addTag("response");
+            xmlBuilder.createAttribute(tag,"terminalID",Terminal.terminalID);
+            xmlBuilder.createAttribute(tag,"terminalType",Terminal.terminalType);
+            tag = xmlBuilder.addTag(tag,transaction.getOperationType(),transaction.getResult());
+            xmlBuilder.createAttribute(tag,"transactionId",String.valueOf(transaction.getTransactionID()));
+            xmlBuilder.createAttribute(tag,"depositNumber",String.valueOf(transaction.getDepositID()));
 
+            xmlBuilder.writeToXMLFile();
+        } catch (Exception ex) {
 
-
-
-
-
+        }
+    }
 }
