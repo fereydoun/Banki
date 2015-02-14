@@ -25,9 +25,9 @@ public class LogBuilder{
     }
 
     public void writeToLog(String text) {
-        synchronized (this.logger) {
+        //synchronized (this.logger) {
             this.logger.info(text);
-        }
+        //}
     }
 
     public void closeFile()

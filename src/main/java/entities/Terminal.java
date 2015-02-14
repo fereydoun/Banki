@@ -97,10 +97,10 @@ public class Terminal {
             XMLBuilder xmlBuilder = new XMLBuilder(Terminal.RESPONSE_FILE_NAME);
             if ((tag = xmlBuilder.getRootTag()) == null) {
                 tag = xmlBuilder.addTag("response");
-                xmlBuilder.createAttribute(tag, "terminalID", Terminal.terminalID);
-                xmlBuilder.createAttribute(tag, "terminalType", Terminal.terminalType);
             }
             tag = xmlBuilder.addTag(tag, transaction.getOperationType(), transaction.getResult());
+            xmlBuilder.createAttribute(tag, "terminalID", Terminal.terminalID);
+            xmlBuilder.createAttribute(tag, "terminalType", Terminal.terminalType);
             xmlBuilder.createAttribute(tag, "transactionId", String.valueOf(transaction.getTransactionID()));
             xmlBuilder.createAttribute(tag, "depositNumber", String.valueOf(transaction.getDepositID()));
 

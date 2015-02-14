@@ -12,7 +12,6 @@ public class Transaction implements Serializable {
     private String operationType;
     private BigDecimal amount;
     private String result;
-    private Terminal terminal;
 
     public int getTransactionID() {
         return transactionID;
@@ -52,14 +51,6 @@ public class Transaction implements Serializable {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public Terminal getTerminal() {
-        return terminal;
-    }
-
-    public void setTerminal(Terminal terminal) {
-        this.terminal = terminal;
     }
 
     public Transaction convertTransMsgToTransObject(String receivedMessage) throws Exception

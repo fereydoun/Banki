@@ -17,7 +17,7 @@ public class XMLBuilder {
 
     public  XMLBuilder(String fileName) throws Exception
     {
-        if (fileName == "")
+        if (fileName.equals(""))
             throw new XMLException("File name is empty",Terminal.LOG_FILE_NAME);
 
         this.fileName = fileName;
@@ -85,9 +85,7 @@ public class XMLBuilder {
             DOMSource domSource = new DOMSource(this.document);
             File file=new File(this.fileName);
             StreamResult streamResult = new StreamResult(file);
-            synchronized (streamResult) {
-                transformer.transform(domSource, streamResult);
-            }
+            transformer.transform(domSource, streamResult);
 
         } catch (Exception ex) {
             throw new XMLException("Error in write to file", Terminal.LOG_FILE_NAME);

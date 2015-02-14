@@ -53,7 +53,7 @@ public class Deposit{
     }
 
 
-    public   void deposit(Transaction transaction) throws Exception {
+    public void deposit(Transaction transaction) throws Exception {
 
         for (Deposit deposit : Deposit.deposits) {
             if (deposit.getDepositNumber().trim().equals(transaction.getDepositID().trim())) {
@@ -64,14 +64,15 @@ public class Deposit{
                 }else{
                     synchronized (deposit) {
                         deposit.setBalance(deposit.getBalance().add(transaction.getAmount()));//add to deposit
+                        transaction.setResult("Deposit Success;Balance # "+deposit.getBalance());
                     }
                 }
-                transaction.setResult("Deposit Success");
+
             }
         }
     }
 
-    public  void withdraw(Transaction transaction) throws Exception {
+    public void withdraw(Transaction transaction) throws Exception {
 
         for (Deposit deposit : Deposit.deposits) {
             if (deposit.getDepositNumber().trim().equals(transaction.getDepositID().trim())) {
@@ -82,9 +83,9 @@ public class Deposit{
                 } else {
                     synchronized (deposit) {
                         deposit.setBalance(deposit.getBalance().subtract(transaction.getAmount()));//subtract from deposit
+                        transaction.setResult("Withdraw Success;Balance # "+deposit.getBalance());
                     }
                 }
-                transaction.setResult("Withdraw Success");
             }
         }
     }
