@@ -12,17 +12,7 @@ public class ServerRunable implements Runnable{
     }
 
     public void run(){
-        Transaction transaction = new Transaction();
-        try {
-            DepositHandler depositHandler = new DepositHandler();
-            transaction = transaction.convertTransMsgToTransObject(receiveMessage());
-            depositHandler.executeClientRequest(transaction);
-            sendMessage(transaction.getResult());
-        } catch (Exception ex) {
-            sendMessage(transaction.getResult());
-            LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
-            logBuilder.writeToLog(ex.getMessage());
-        }
+        receiveMessage();
     }
 
     public void start(){
@@ -30,35 +20,52 @@ public class ServerRunable implements Runnable{
         thread.start();
     }
 
-    public String receiveMessage(){
+    public void receiveMessage() {
         String receivedMessage = "";
         byte[] byteBuffer = new byte[Server.BUFFER_SIZE];
-        boolean completed = false;
         try {
             InputStream inputStream = this.socket.getInputStream();
-            while ((!completed) && (inputStream.read(byteBuffer)) != -1 ) {
+            while ((inputStream.read(byteBuffer)) != -1) {
 
                 String s = new String(byteBuffer);
                 receivedMessage += s.trim();
                 String patternExit = receivedMessage.substring(receivedMessage.length() - Server.END_OF_MSG_LEN);
-                if(patternExit.trim().compareTo(Server.END_OF_MSG.trim()) == 0)
-                    completed=true;
+                if (patternExit.trim().compareTo(Server.END_OF_MSG.trim()) == 0) {
+                    processingClientRequest(receivedMessage);
+                    receivedMessage ="";
+                }
             }
         } catch (Exception ex) {
+            LogBuilder logBuilder = new LogBuilder(Server.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
+        }
+    }
+
+    private void processingClientRequest(String receivedMessage){
+
+        Transaction transaction = new Transaction();
+        try {
+            DepositHandler depositHandler = new DepositHandler();
+            transaction = transaction.convertTransMsgToTransObject(receivedMessage);
+            depositHandler.executeClientRequest(transaction);
+            sendMessage(transaction.getResult());
+        } catch (Exception ex) {
+            sendMessage(transaction.getResult());
             LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
         }
-        return receivedMessage;
     }
 
     public void sendMessage(String sendMessage){
         try {
             OutputStream outputStream = this.socket.getOutputStream();
             outputStream.write((sendMessage + Server.END_OF_MSG.trim()).getBytes());
-            this.socket.close();
         } catch (Exception ex) {
             LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
         }
     }
 }

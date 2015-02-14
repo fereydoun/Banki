@@ -28,6 +28,7 @@ public class DepositHandler {
                 } catch (Exception ex) {
                     LogBuilder logBuilder=new LogBuilder(Server.LOG_FILE_NAME);
                     logBuilder.writeToLog(ex.getMessage());
+                    logBuilder.closeFile();
                 }
             }
         } catch (Exception ex) {

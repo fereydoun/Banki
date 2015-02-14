@@ -10,5 +10,6 @@ public class FileException extends Exception{
         super(s);
         LogBuilder logBuilder=new LogBuilder(logFileName);
         logBuilder.writeToLog(s);
+        logBuilder.closeFile();
     }
 }

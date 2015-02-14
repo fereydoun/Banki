@@ -13,8 +13,10 @@ public class JSONReader {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject;
         try {
-            Object object = jsonParser.parse(new FileReader(fileName));
+            FileReader fileReader=new FileReader(fileName);
+            Object object = jsonParser.parse(fileReader);
             jsonObject=(JSONObject)object;
+            fileReader.close();
 
         }catch (FileNotFoundException e){
             e.printStackTrace();

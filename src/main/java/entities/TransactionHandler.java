@@ -4,7 +4,7 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionHandler {
+public class TransactionHandler{
 
     public List<Transaction> loadTransactionsFromXML(String fileName) throws Exception{
 
@@ -24,6 +24,7 @@ public class TransactionHandler {
                 }catch (Exception ex){
                     LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
                     logBuilder.writeToLog(ex.getMessage());
+                    logBuilder.closeFile();
                 }
             }
         }catch (Exception ex){
@@ -32,16 +33,26 @@ public class TransactionHandler {
         return transactions;
     }
 
-    public void runTransactions(List<Transaction> transactions) {
-        Terminal terminal;
+    public void runTransactions(List<Transaction> transactions){
+        Terminal terminal = new Terminal();
         String transactionMessage;
         String responseMessage;
+        if(terminal.connect() != 1){
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog("cannot connect to server");
+            logBuilder.closeFile();
+            return;
+        }
+
         for (Transaction transaction : transactions) {
-            terminal = new Terminal();
             transactionMessage = transaction.convertTransObjectToTransMsg(transaction);
             responseMessage = terminal.sendRequestToServer(transactionMessage);
             transaction.setResult(responseMessage.substring(0,responseMessage.length()-Terminal.END_OF_MSG_LEN));//cut end of message #EXIT#
             terminal.writeReponseToXML(transaction);
+
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog(transaction.getResult());
+            logBuilder.closeFile();
         }
     }
 }

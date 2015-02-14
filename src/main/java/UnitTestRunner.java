@@ -20,33 +20,36 @@ public class UnitTestRunner {
             @Override
             public void run() {
 
-                ArrayList<Transaction> arrayList1 = new ArrayList<Transaction>();
+                ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
                 DepositHandler depositHandler1 = new DepositHandler();
                 Transaction transaction1 = new Transaction();
                 transaction1.setTransactionID(1);
                 transaction1.setOperationType("deposit");
                 transaction1.setAmount(new BigDecimal(50));
                 transaction1.setDepositID("33227781");
-                arrayList1.add(transaction1);
+                transactionList.add(transaction1);
 
-                Transaction transaction2 = new Transaction();
-                transaction2.setTransactionID(2);
-                transaction2.setOperationType("withdraw");
-                transaction2.setAmount(new BigDecimal(105));
-                transaction2.setDepositID("35527439");
-                arrayList1.add(transaction2);
+//                Transaction transaction2 = new Transaction();
+//                transaction2.setTransactionID(2);
+//                transaction2.setOperationType("withdraw");
+//                transaction2.setAmount(new BigDecimal(105));
+//                transaction2.setDepositID("35527439");
+//                transactionList.add(transaction2);
 
-                for (Transaction transaction : arrayList1) {
+                for (Transaction transaction : transactionList) {
                     try {
                         depositHandler1.executeClientRequest(transaction);
+                        for (Deposit deposit : Deposit.deposits) {
+                            System.out.println("Thread1 " + deposit.getDepositNumber() + " # " + deposit.getBalance());
+                        }
                     } catch (Exception ex) {
 
                     }
                 }
 
-                for (Deposit deposit : Deposit.deposits) {
-                    System.out.println("Thread1" + deposit.getDepositNumber() + "#" + deposit.getBalance());
-                }
+//                for (Deposit deposit : Deposit.deposits) {
+//                    System.out.println("Thread1" + deposit.getDepositNumber() + "#" + deposit.getBalance());
+//                }
             }
         };
 
@@ -54,33 +57,38 @@ public class UnitTestRunner {
             @Override
             public void run() {
 
-                ArrayList<Transaction> arrayList1 = new ArrayList<Transaction>();
+                ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
                 DepositHandler depositHandler2 = new DepositHandler();
                 Transaction transaction1 = new Transaction();
                 transaction1.setTransactionID(1);
                 transaction1.setOperationType("deposit");
                 transaction1.setAmount(new BigDecimal(70));
                 transaction1.setDepositID("33227781");
-                arrayList1.add(transaction1);
+                transactionList.add(transaction1);
 
-                Transaction transaction2 = new Transaction();
-                transaction2.setTransactionID(2);
-                transaction2.setOperationType("withdraw");
-                transaction2.setAmount(new BigDecimal(15));
-                transaction2.setDepositID("35527439");
-                arrayList1.add(transaction2);
+//                Transaction transaction2 = new Transaction();
+//                transaction2.setTransactionID(2);
+//                transaction2.setOperationType("withdraw");
+//                transaction2.setAmount(new BigDecimal(15));
+//                transaction2.setDepositID("35527439");
+//                transactionList.add(transaction2);
 
-                for (Transaction transaction : arrayList1) {
+                for (Transaction transaction : transactionList) {
                     try {
+
                         depositHandler2.executeClientRequest(transaction);
+//                        Thread.sleep(5000);
+                        for (Deposit deposit : Deposit.deposits) {
+                            System.out.println("Thread2 " + deposit.getDepositNumber() + " # " + deposit.getBalance());
+                        }
                     } catch (Exception ex) {
 
                     }
                 }
 
-                for (Deposit deposit : Deposit.deposits) {
-                    System.out.println("Thread2" + deposit.getDepositNumber() + "#" + deposit.getBalance());
-                }
+//                for (Deposit deposit : Deposit.deposits) {
+//                    System.out.println("Thread2 " + deposit.getDepositNumber() + " # " + deposit.getBalance());
+//                }
             }
         };
 

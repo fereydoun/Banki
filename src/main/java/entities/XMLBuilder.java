@@ -83,7 +83,8 @@ public class XMLBuilder {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(this.document);
-            StreamResult streamResult = new StreamResult(new File(this.fileName));
+            File file=new File(this.fileName);
+            StreamResult streamResult = new StreamResult(file);
             synchronized (streamResult) {
                 transformer.transform(domSource, streamResult);
             }

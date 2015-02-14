@@ -17,6 +17,7 @@ public class XMLReader {
         try{
             DocumentBuilder docBuilder=docBuilderFactory.newDocumentBuilder();
             dom = docBuilder.parse(fileName);
+
         }
         catch (Exception ex){
             throw new Exception(ex.getMessage());

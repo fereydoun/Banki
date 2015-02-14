@@ -15,6 +15,8 @@ public class Terminal {
     public static String RESPONSE_FILE_NAME = "src/main/resources/response/response.xml";
     public static final String END_OF_MSG = "#EXIT#";
     public static final int END_OF_MSG_LEN = 6;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     public void main(){
         try{
@@ -25,6 +27,7 @@ public class Terminal {
         }catch (Exception ex){
             LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
         }
     }
 
@@ -46,16 +49,29 @@ public class Terminal {
         }
     }
 
+    public int connect()
+    {
+        try {
+            Socket socket = new Socket(ServerConfig.serverIP,ServerConfig.serverPort);
+            this.inputStream = socket.getInputStream();
+            this.outputStream= socket.getOutputStream();
+            return 1;
+        }catch (Exception ex)
+        {
+            LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
+            logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
+        }
+
+        return 0;
+    }
+
     public String sendRequestToServer(String requestString){
         String responseMessage ="";
         boolean completed = false;
         int bufferSize=64;
         byte[] byteBuffer=new byte[bufferSize];
-        Socket socket;
         try {
-            socket = new Socket(ServerConfig.serverIP,ServerConfig.serverPort);
-            InputStream inputStream=socket.getInputStream();
-            OutputStream outputStream=socket.getOutputStream();
             outputStream.write(requestString.getBytes());//send message to server
 
             while ((!completed) && (inputStream.read(byteBuffer)) != -1)
@@ -69,6 +85,7 @@ public class Terminal {
         }catch (Exception ex){
             LogBuilder logBuilder=new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
         }
         return responseMessage;
     }
@@ -91,6 +108,7 @@ public class Terminal {
         } catch (Exception ex) {
             LogBuilder logBuilder = new LogBuilder(Terminal.LOG_FILE_NAME);
             logBuilder.writeToLog(ex.getMessage());
+            logBuilder.closeFile();
         }
     }
 }
